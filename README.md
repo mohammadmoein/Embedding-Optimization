@@ -27,12 +27,12 @@ The above figure shows how the embedding will start two decompose to two cluster
 ## Modeling & Optimization
 Let, $A \in \reals^{n\times n}$ be a given adjacency matrix, where $n$ is the number of data points. The main idea of RSC is that the adjacency (similarity) includes noise. Noise is translated to incorrectly connected edges in RSC. Thus, RSC attempts to find bad edges and remove them in the hope of having better similarity matrix. 
 RSC decompose $A$ in two factors:
-$$
+$
 \begin{gather*}
  A = A^g + A^c\\
  A^g = A^{g^T},A^c = A^{c^T}, 
 \end{gather*}
-$$
+$
 where $A^c \in \reals^{n \times n}$ represents the corruption (noise) occurred in observed $A$ and $A^g \in \reals^{n \times n}$ represents true adjacency matrix. It is desired to do the clustering on $A^g$, thus the problem reduced on how to find $A^g$. 
 
 
