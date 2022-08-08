@@ -25,19 +25,17 @@ flexibility.
 
 The above figure shows how the embedding will start two decompose to two clusters after several iterations which lead to a space where vanilla kmeans does a great job at decomposing the datapoints. 
 ## Modeling & Optimization
-Let, $A \in \reals^{n\times n}$ be a given adjacency matrix, where $n$ is the number of data points. The main idea of RSC is that the adjacency (similarity) includes noise. Noise is translated to incorrectly connected edges in RSC. Thus, RSC attempts to find bad edges and remove them in the hope of having better similarity matrix. 
-RSC decompose $A$ in two factors:
-$
+Let, $A \in \mathbb{R}^{n\times n}$ be a given adjacency matrix, where $n$ is the number of data points. The main idea of RSC is that the adjacency (similarity) includes noise. Noise is translated to incorrectly connected edges in RSC. Thus, RSC attempts to find bad edges and remove them in the hope of having better similarity matrix. RSC decompose $A$ in two factors
+
+$$
 \begin{gather*}
  A = A^g + A^c\\
  A^g = A^{g^T},A^c = A^{c^T}, 
 \end{gather*}
-$
-where $A^c \in \reals^{n \times n}$ represents the corruption (noise) occurred in observed $A$ and $A^g \in \reals^{n \times n}$ represents true adjacency matrix. It is desired to do the clustering on $A^g$, thus the problem reduced on how to find $A^g$. 
+$$
 
-
+where $A^c \in \mathbb{R}^{n \times n}$ represents the corruption (noise) occurred in observed $A$ and $A^g \in\mathbb{R}^{n \times n}$ represents true adjacency matrix. It is desired to do the clustering on $A^g$, thus the problem reduced on how to find $A^g$. 
 An informative graph essentially determines the potentials of the vast graph-oriented learning algorithms. This section is about approaches in which they construct graph by taking advantage of the overall contextual information instead of only pairwise Euclidean distance and local information. Compared with the conventional $k$-nn graph and $\epsilon$-ball graph, these methods have following advantages:
-
  - not relying on the local neighborhood 
  - robustness to noise and outliers
  - forcing certain structure and adaptive sparsity
@@ -45,31 +43,37 @@ An informative graph essentially determines the potentials of the vast graph-ori
 ### RPCA Spectral Clustering
 
 Given a matrix $A$ generated as the sum of two components
+
 $$
 \begin{equation}
 A = L + E, 
 \end{equation}
 $$
-where $L$ is an ideal low-rank matrix and $E$ represents the noise. Then, RPCA constructs the following optimization problem,
-$$
-\begin{gather}
- \argmin\limits_{L,E} rank(L) + \lambda \|E\|_0 \\
- A = L +E
-\end{gather}
-$$
-This constraint usually substituted by nuclear norm $|L|_*$, the summation of singular values. So, the problem  becomes:
-$$
-\begin{gather}
- \argmin\limits_{L,E} \|L\|_* + \lambda \|E\|_0 \\
- A = L +E
-\end{gather}
-$$
-,which can be solved efficiently with ADMM method. 
 
-RPCA Spectral clustering (RPCASC) is formulated as follows. Given adjacency matrix $A_c \in \reals^{n \times n}$,then
+where $L$ is an ideal low-rank matrix and $E$ represents the noise. Then, RPCA constructs the following optimization problem,
+
 $$
 \begin{gather}
- \argmin \limits_{H,Z,E} \|Z\|_* + \lambda\|E\|_1 + \mu \quad Tr (H^T(diag(Z\textbf{1})-Z)H)  \\
+ \text{argmin}_{L,E} \quad rank(L) + \lambda \|E\|_0 \\
+ A = L +E
+\end{gather}
+$$
+
+This constraint usually substituted by nuclear norm $|L|_*$, the summation of singular values. So, the problem  becomes:
+
+$$
+\begin{gather}
+ \text{argmin}_{L,E} \quad \|L\|_* + \lambda \|E\|_0 \\
+ A = L +E
+\end{gather}
+$$
+
+,which can be solved efficiently with ADMM method. 
+RPCA Spectral clustering (RPCASC) is formulated as follows. Given adjacency matrix $A_c \in \textbf{1}^{n \times n}$,then
+
+$$
+\begin{gather}
+ \text{argmin}_{H,Z,E} \quad \|Z\|_* + \lambda\|E\|_1 + \mu \quad Tr (H^T(diag(Z\textbf{1})-Z)H)  \\
  A_c = Z + E \\
  H^TH = I.
 \end{gather}
@@ -91,18 +95,23 @@ $$
 \end{align}
 $$
 - **Updating J** 
+
 $$
 \begin{gather}
  \|J\|_* + \frac{\beta}{2} \|J - (Z + Y_2/\beta)|^2_F.
 \end{gather}
 $$
+
 Which is equal to ```prox``` of nuclear norm called _singular value thresholding_.
+
 $$
 prox_{\lambda\|.\|_*} (A) = \sum_{1}^{n} (\sigma_i - \lambda)_{+} u_i v_i^T
 $$,
+
 where $A = \sum_{1}^{n} \sigma_i  u_iv_i^T$ is the singular value decomposition of $A$.
 
 - **Updating E** 
+- 
 $$
 \begin{gather}
  \lambda \|E\|_1 + \frac{\beta}{2}\|E - (A_c - Z + Y_1/\beta)\|^2_F,
@@ -110,6 +119,7 @@ $$
 $$
 
 - **Updating Z** 
+- 
 $$
 \begin{align}
  &\quad Tr(H^T\mathbb{diag}(Z\textbf{1})H) - \quad Tr(H^TZH) +\\& <Y_1, A_c - Z - E> + <Y_2, Z-J> 
@@ -118,14 +128,17 @@ $$
 $$
 
 - **Updating H**
+- 
 $$
 \begin{gather}
  \min\quad Tr(H^TL_zH) \\ \nonumber
  H^TH = I,
 \end{gather}
 $$
+
 where $L_z$ denotes a Laplacian built upon adjacency matrix induced by $0.5*(|Z|+|Z^T|)$. 
 - **Updating Lagrange**
+- 
 $$
 \begin{gather}
 \nonumber
