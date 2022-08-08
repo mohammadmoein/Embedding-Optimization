@@ -80,7 +80,7 @@ $$
 $$
 $$
 \begin{gather}
- \argmin \limits_{H,Z,E,J} \|J\|_* + \lambda\|E\|_1 + \mu\quad Tr (H^T(diag(Z\textbf{1})-Z)H)  \\
+ \text{argmin}_{H,Z,E,J} \|J\|_* + \lambda\|E\|_1 + \mu\quad Tr (H^T(diag(Z\textbf{1})-Z)H)  \\
  A_c = Z + E \\
  H^TH = I\\
  Z = J.
@@ -105,10 +105,10 @@ $$
 Which is equal to ```prox``` of nuclear norm called _singular value thresholding_.
 
 $$
-prox_{\lambda\|.\|_*} (A) = \sum_{1}^{n} (\sigma_i - \lambda)_{+} u_i v_i^T
-$$,
+\text{prox}_{\lambda\|.\|_*} (A) = \sum_{1}^{n} (\sigma_i - \lambda)_{+} u_i v_i^T
+$$
 
-where $A = \sum_{1}^{n} \sigma_i  u_iv_i^T$ is the singular value decomposition of $A$.
+where $A = \sum \sigma_i  u_iv_i^T$ is the singular value decomposition of $A$.
 
 - **Updating E** 
 - 
